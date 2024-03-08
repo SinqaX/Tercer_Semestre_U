@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import *
 
 class ManejoFechas:
     def __init__(self, fecha_str):
@@ -31,3 +31,17 @@ fecha_otra = input("Ingrese otra fecha en formato YYYY-MM-DD: ")
 anos, meses, dias = manejo_fechas.calcular_diferencia(fecha_otra)
 
 print(f"La diferencia de tiempo es de {anos} años, {meses} meses y {dias} días.")
+
+
+tiempo = datetime.datetime.now()
+
+print(tiempo)
+print(tiempo.year)
+print(tiempo.month)
+print(tiempo.day)
+print(tiempo.minute)
+print(tiempo.second)
+print(tiempo.microsecond)
+
+print("hoy es {} de el mes {} en el año {}".format(tiempo.day,tiempo.month,tiempo.year))
+ 
