@@ -28,9 +28,11 @@ class MainWindow(QWidget):
         button.setText("me has presionado pedrito!")
         button.resize(button.sizeHint().width(), button.sizeHint().height())
 
-    def the_window_title_changed(self, window_title):
+    def the_window_title_changed(self, window_title,button):
         if window_title == "algo salio mal":
             self.button.setDisabled(True)
+            
+
 
 app = QApplication(sys.argv)
 
