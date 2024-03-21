@@ -79,6 +79,7 @@ class RegistrarUsuarioView(QDialog):
                 "Usuario creado correctamente!",
                 QMessageBox.StandardButton.Ok,
                 QMessageBox.StandardButton.Ok)
+                self.close()
             except FileNotFoundError as e:
                 QMessageBox.warning(self, "Error",
                 f"La base de datos de usuario no existe:{e}",
