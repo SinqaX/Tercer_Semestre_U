@@ -1,5 +1,7 @@
 from PySide6.QtWidgets import QApplication, QPushButton, QWidget, QMessageBox, QLabel, QLineEdit
-from PySide6.QtGui import QFont
+from PySide6.QtGui import QFont 
+from PySide6.QtCore import Qt
+import re
 import sys
 
 class MainWindow(QWidget):
@@ -50,8 +52,10 @@ class MainWindow(QWidget):
         self.label_resultado = QLabel(self)
         self.label_resultado.setText("")
         self.label_resultado.setFont(QFont("Arial", 15))
-        self.label_resultado.move(200,50)
+        self.label_resultado.move(130,50)
         self.label_resultado.resize(220,100)
+        self.label_resultado.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
 
     def validar_numero(self, texto):
         try:
@@ -72,29 +76,41 @@ class MainWindow(QWidget):
         if self.validar_numero(num1) and self.validar_numero(num2) and operacion.strip():  
             num1final = float(num1)  # Convertir siempre a flotante
             num2final = float(num2)  # Convertir siempre a flotante
-            operacionf = operacion.lower()
+            operacionf = re.sub(r'\s', '', operacion).lower()
                 
             if operacionf == "suma" or operacionf == "+":
                 resultado = num1final + num2final
                 self.label_resultado.setText(str(resultado))
+
             elif operacionf == "resta" or operacionf == "-":
                 resultado = num1final - num2final
                 self.label_resultado.setText(str(resultado))
+
             elif operacionf == "multi" or operacionf == "*":
                 resultado = num1final * num2final
                 self.label_resultado.setText(str(resultado))
+
             elif operacionf == "divi" or operacionf == "/":
                 if num2final != 0:
                     resultado = num1final / num2final
                     self.label_resultado.setText(str(resultado))
                 else:
                     self.label_resultado.setText("División entre 0\nno soportada")
-                                                      
+
+            elif operacionf == "potencia" or operacionf == "^":
+                resultado = num1final ** num2final
+                self.label_resultado.setText(str(resultado))
+
             else:
                 self.label_resultado.setText("La operación digitada\nno existe")
+            
+            self.label_resultado.setAlignment(Qt.AlignmentFlag.AlignCenter)
                                     
         else:
-             self.label_resultado.setText("Los tipos de datos\ningresados son incorrectos\n o no falta la operación")
+             self.label_resultado.setText("Los tipos de datos\ningresados son\nincorrectos")
+             self.label_resultado.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            
+        
                                 
 
 
