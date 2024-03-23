@@ -13,7 +13,9 @@ class MainWindow(QWidget):
         #label para texto en la ventana
         label  = QLabel(self)
         #imagen
-        # imagen = QPixmap("C:\\Users\\SEBASTIAN\\OneDrive\\Escritorio\\mono.jpg")
+        # imagen = QPixmap(os.path.join(basedir,
+        #                                 "img",
+        #                                 "mono.png"))
         # label.setPixmap(imagen)
         # label.resize(label.sizeHint())
         movie = QMovie("C:\\Users\\SEBASTIAN\\OneDrive\\Escritorio\\giphy (1).gif")  # Cambia "ruta/al/archivo.gif" por la ruta de tu archivo GIF

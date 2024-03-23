@@ -15,6 +15,6 @@ class MainWindow(QWidget):
 
     def generar_contenido(self):
         label  = QLabel(self)
-        image_path = QPixmap("C:\\Users\\SEBASTIAN\\OneDrive\\Escritorio\\accesos directos\\img gifs\\mono.jpg")
+        image_path = QPixmap("C:/Users/SEBASTIAN/OneDrive/Documentos/GitHub/Tercer_Semestre_U/img/mono.jpg")
         label.setPixmap(image_path)
         label.resize(label.sizeHint())
