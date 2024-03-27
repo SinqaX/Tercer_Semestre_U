@@ -8,20 +8,31 @@ class MainWindow(QWidget):
 
         super().__init__()
 
+
         #atributo para colocar titulo
         self.setWindowTitle("aplicacion con imagen")
         #label para texto en la ventana
         label  = QLabel(self)
         #imagen
-        # imagen = QPixmap(os.path.join(basedir,
-        #                                 "img",
-        #                                 "mono.png"))
-        # label.setPixmap(imagen)
-        # label.resize(label.sizeHint())
-        movie = QMovie("C:\\Users\\SEBASTIAN\\OneDrive\\Escritorio\\giphy (1).gif")  # Cambia "ruta/al/archivo.gif" por la ruta de tu archivo GIF
-        label.setMovie(movie)
-        movie.start()
-        label.resize(label.sizeHint())
+# Obtiene el directorio base del archivo de script actual
+        basedir = os.path.dirname(__file__) 
+# Carga la imagen "mono.png" ubicada en el directorio "img"
+        imagen = QPixmap(os.path.join(basedir,"img","mono.png"))  
+# Establece la imagen en el QLabel
+        label.setPixmap(imagen)  
+# Ajusta el tamaño del QLabel al tamaño de la imagen
+        label.resize(label.sizeHint())  
+
+        #Gif
+# Carga el archivo GIF "giphy (1).gif" ubicado en el directorio "img"
+        movie = QMovie(os.path.join(basedir, "img","giphy (1).gif"))  
+# Establece el archivo GIF como la película en el QLabel        
+        label.setMovie(movie)  
+# Inicia la reproducción de la película GIF
+        movie.start()  
+# Ajusta el tamaño del QLabel al tamaño del GIF
+        label.resize(label.sizeHint())  
+
         
         
 
