@@ -1,10 +1,15 @@
 from PySide6.QtCore import Qt
+
 from PySide6.QtWidgets import QApplication, QPushButton, QWidget,QLabel, QLineEdit
 from PySide6.QtGui import QIcon, QFont
 from PySide6 import QtCore
 import math
 import os
 import sys
+
+# problemas con el promedio
+# elevacion volverla mas dinamica
+#controlar division /0
 
 def apply_dark_theme(app):
     # Define el estilo CSS para el tema oscuro
@@ -42,7 +47,8 @@ class MainWindow(QWidget):
         self.input_line.setGeometry(5, 5, 215, 125)
         self.input_line.setFont(QFont("Arial", 35))
         self.input_line.setStyleSheet("border: none;")
-        self.input_line.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignBottom)
+        self.input_line.setAlignment(QtCore.Qt.AlignmentFlag(10))
+        self.input_line.setReadOnly(True)  # Deshabilita la edición directa
 
         self.setWindowTitle("Calculadora")
         Icon = QIcon(os.path.join(basedir,"img","icon.png"))

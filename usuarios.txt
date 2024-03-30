@@ -1,6 +1,2 @@
 
-admin,1234
-sebas,1138
-asd,as
-teresa,1234
-teresa,1234
+sebastian,18,Ing En Sistemas,C:/Users/SEBASTIAN/OneDrive/Documentos/GitHub/Tercer_Semestre_U/img/perro.jpg
