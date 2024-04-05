@@ -1,5 +1,4 @@
 from PySide6.QtCore import Qt
-
 from PySide6.QtWidgets import QApplication, QPushButton, QWidget,QLabel, QLineEdit
 from PySide6.QtGui import QIcon, QFont
 from PySide6 import QtCore
@@ -47,6 +46,7 @@ class MainWindow(QWidget):
         self.input_line.setGeometry(5, 5, 215, 125)
         self.input_line.setFont(QFont("Arial", 35))
         self.input_line.setStyleSheet("border: none;")
+        # self.input_line.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignBottom)
         self.input_line.setAlignment(QtCore.Qt.AlignmentFlag(10))
         self.input_line.setReadOnly(True)  # Deshabilita la edición directa
 
