@@ -143,67 +143,118 @@ from PySide6.QtWidgets import QWidget
 
 
 
-# if __name__=="__main__":
-#     app = QApplication([])
-#     window = mainWindow()
-#     window.show()
-#     sys.exit(app.exec())
+
+# class mainWindow(QWidget):
+
+#     def __init__(self):
+#         super().__init__()
+#         colores = ["green", "blue", "yellow", "pink", "gray", "orange", "purple"]
+
+#         self.setWindowTitle("Colores")
+#         self.setMinimumSize(30
+#                              0,180)
+
+#         principal = QHBoxLayout()
+
+#         qvbox1 = QVBoxLayout()
+#         qvbox2 = QVBoxLayout()
+#         label = QLabel("4")
+#         label.setFont(QFont("Courier", 60))
+#         label.font().setBold(True)
+#         label.setAutoFillBackground(True)
+#         pallete = label.palette()
+#         pallete.setColor(QPalette.Window, colores[6])
+#         label.setPalette(pallete)
+#         qvbox2.addWidget(label)
+#         qvbox3 = QVBoxLayout()
+        
+#         for i in range(6):
+#             if i<3:
+#                 label = QLabel(f"{i+1}")
+#                 label.setFont(QFont("Courier", 60))
+#                 label.font().setBold(True)
+#                 label.setAutoFillBackground(True)
+#                 pallete = label.palette()
+#                 pallete.setColor(QPalette.Window, colores[i])
+#                 label.setPalette(pallete)
+#                 qvbox1.addWidget(label)
+#             else:
+#                 if i == 4:
+#                     qvbox3.addSpacing(40)
+#                 else:
+#                     qvbox3.setSpacing(0)
+
+#                 label = QLabel(f"{i+1}")
+#                 label.setFont(QFont("Courier", 60))
+#                 label.font().setBold(True)
+#                 label.setAutoFillBackground(True)
+#                 pallete = label.palette()
+#                 pallete.setColor(QPalette.Window, colores[i])
+#                 label.setPalette(pallete)
+                
+#                 qvbox3.addWidget(label)
+
+#         principal.addLayout(qvbox1)
+#         principal.addLayout(qvbox2)
+#         principal.addLayout(qvbox3)
+        
+#         self.setLayout(principal)
 
 class mainWindow(QWidget):
-
     def __init__(self):
         super().__init__()
-        colores = ["green", "blue", "yellow", "pink", "gray", "orange", "purple"]
 
-        self.setWindowTitle("Colores")
-        self.setMinimumSize(30
-                             0,180)
+        qvbox_principal = QVBoxLayout()
+        self.check_principal = QCheckBox("Todos")
+        self.check_principal.clicked.connect(self.principal)
 
-        principal = QHBoxLayout()
+        group = QGroupBox()
+        qvbox = QVBoxLayout()
+        qvbox.setSpacing(0)
+        self.check_1 = QCheckBox("Amarillo")
+        self.check_2 = QCheckBox("Azul")
+        self.check_3 = QCheckBox("Rojo")
+        self.check_1.clicked.connect(self.secundario)
+        self.check_2.clicked.connect(self.secundario)
+        self.check_3.clicked.connect(self.secundario)
+        qvbox.addWidget(self.check_1)
+        qvbox.addWidget(self.check_2)
+        qvbox.addWidget(self.check_3)
+        group.setLayout(qvbox)
 
-        qvbox1 = QVBoxLayout()
-        qvbox2 = QVBoxLayout()
-        label = QLabel("4")
-        label.setFont(QFont("Courier", 60))
-        label.font().setBold(True)
-        label.setAutoFillBackground(True)
-        pallete = label.palette()
-        pallete.setColor(QPalette.Window, colores[6])
-        label.setPalette(pallete)
-        qvbox2.addWidget(label)
-        qvbox3 = QVBoxLayout()
+        qvbox_principal.addWidget(self.check_principal)
+        qvbox_principal.addWidget(group)
         
-        for i in range(6):
-            if i<3:
-                label = QLabel(f"{i+1}")
-                label.setFont(QFont("Courier", 60))
-                label.font().setBold(True)
-                label.setAutoFillBackground(True)
-                pallete = label.palette()
-                pallete.setColor(QPalette.Window, colores[i])
-                label.setPalette(pallete)
-                qvbox1.addWidget(label)
-            else:
-                if i == 4:
-                    qvbox3.addSpacing(40)
-                else:
-                    qvbox3.setSpacing(0)
+        self.setLayout(qvbox_principal)
 
-                label = QLabel(f"{i+1}")
-                label.setFont(QFont("Courier", 60))
-                label.font().setBold(True)
-                label.setAutoFillBackground(True)
-                pallete = label.palette()
-                pallete.setColor(QPalette.Window, colores[i])
-                label.setPalette(pallete)
-                
-                qvbox3.addWidget(label)
+    def principal(self):    
+        self.check_principal.setTristate(False)
+        if self.check_principal.isChecked():
+            self.check_1.setChecked(True)
+            self.check_2.setChecked(True)
+            self.check_3.setChecked(True)
+        else: 
+            self.check_1.setChecked(False)
+            self.check_2.setChecked(False)
+            self.check_3.setChecked(False)
 
-        principal.addLayout(qvbox1)
-        principal.addLayout(qvbox2)
-        principal.addLayout(qvbox3)
+    def secundario(self):
+        self.check_principal.setTristate(True)
+
+        cheked = sum([self.check_1.isChecked(),
+                      self.check_2.isChecked(),
+                      self.check_3.isChecked()])
         
-        self.setLayout(principal)
+        if cheked == 3:
+            self.check_principal.setCheckState(Qt.Checked)
+        elif cheked == 0:
+            self.check_principal.setCheckState(Qt.Unchecked)
+        else:
+            self.check_principal.setCheckState(Qt.PartiallyChecked)
+            
+
+        
+
 
 if __name__=="__main__":
     app = QApplication([])
