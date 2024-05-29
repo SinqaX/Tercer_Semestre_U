@@ -35,7 +35,7 @@ class MainWindow(QWidget):
         super().__init__()
 
         basedir = os.path.dirname(__file__)
-        self.setup_vbox_color()
+        self.setup_vbox()
         
         
         self.setWindowTitle("Aplicacion con Layouts")
