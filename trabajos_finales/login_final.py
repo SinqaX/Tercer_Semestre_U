@@ -16,7 +16,7 @@ class MainWindow(QWidget):
         
         # Configuración de la ventana principal
         self.setWindowTitle("Planeacion y Organizacion de Viajes")
-        self.setMinimumSize(400,600)
+        self.setGeometry(370,130,600,500)
 
         self.layout_principal = QHBoxLayout()
         self.layout_principal.setContentsMargins(10,0,0,0)
@@ -48,7 +48,7 @@ class MainWindow(QWidget):
         self.button_registro_interfaz = QPushButton("Registrate")
         self.button_registro_interfaz.setFixedSize(100,30)
         qform_login.addRow("¿No tienes una cuenta?", self.button_registro_interfaz)
-        self.button_registro_interfaz.clicked.connect(lambda : self.layout_widgets.setCurrentWidget(self.singup_widget))
+        self.button_registro_interfaz.clicked.connect(self.cambiar_a_registro)
         qform_login.setContentsMargins(0,0,0,0)
 
         self.usuario = QLineEdit()
@@ -96,7 +96,7 @@ class MainWindow(QWidget):
         self.button_iniciar_sesion_interfaz = QPushButton("Inicia Sesion")
         self.button_iniciar_sesion_interfaz.setFixedSize(100,30)
         qform_registro.addRow("¿Ya tienes una cuenta?", self.button_iniciar_sesion_interfaz)
-        self.button_iniciar_sesion_interfaz.clicked.connect(lambda: self.layout_widgets.setCurrentWidget(self.login_widget))
+        self.button_iniciar_sesion_interfaz.clicked.connect(self.cambiar_a_login)
         qform_registro.setContentsMargins(0,0,0,0)
 
         qhbox_registro = QHBoxLayout()
@@ -164,6 +164,8 @@ class MainWindow(QWidget):
 
         self.layout_principal.addLayout(self.layout_widgets)
 
+        
+
     def imagen(self):
         label = QLabel()
         
@@ -182,6 +184,27 @@ class MainWindow(QWidget):
         line_edit.setEchoMode(QLineEdit.EchoMode.Password)
         icon = QIcon(os.path.join(self.basedir, "img_trabajos", "ojo-cerrado-morado.png"))
         button.setIcon(icon)
+
+    def cambiar_a_login(self):
+        self.layout_widgets.setCurrentWidget(self.login_widget)
+        self.usuario.clear()
+        self.contraseña.clear()
+        self.usuario.setStyleSheet("border-color: gray;")
+        self.contraseña.setStyleSheet("border-color: gray;")
+
+    def cambiar_a_registro(self):
+        self.layout_widgets.setCurrentWidget(self.singup_widget)
+        self.nombre_registro.clear()
+        self.apellido_registro.clear()
+        self.email.clear()
+        self.contraseña_registro.clear()
+        self.contraseña_registro_verificacion.clear()
+        self.nombre_registro.setStyleSheet("border-color: gray;")
+        self.apellido_registro.setStyleSheet("border-color: gray;")
+        self.email.setStyleSheet("border-color: gray;")
+        self.contraseña_registro.setStyleSheet("border-color: gray;")
+        self.contraseña_registro_verificacion.setStyleSheet("border-color: gray;")
+
 
     def validar_login(self):
         usuario = self.usuario.text().strip()
@@ -213,57 +236,77 @@ class MainWindow(QWidget):
                 self.mostrar_warning("El campo de contraseña no puede estar vacío.")
 
     def validar_registro(self):
-        nombre = self.validar_nombre_registro(self.nombre_registro)
-        apellido = self.validar_apellido_registro(self.apellido_registro)
-        email = self.validar_email_registro(self.email)
-        password = self.validar_password_registro(self.contraseña_registro)
-        validacion_password = self.validar_password_registro(self.contraseña_registro_verificacion)
+        nombre = self.nombre_registro.text().strip()
+        apellido = self.apellido_registro.text().strip()
+        email = self.email.text().strip()
+        password = self.contraseña_registro.text().strip()
+        validacion_password = self.contraseña_registro_verificacion.text().strip()
 
-        if nombre and apellido and email:
-            if password == validacion_password:
-                msg_box = QMessageBox(self)
-                msg_box.setIcon(QMessageBox.Information)
-                msg_box.setText("Cuenta creada con éxito.")
-                msg_box.setWindowTitle("Cuenta Creada")
+        mensajes_alerta = []  # Lista para almacenar mensajes de alerta
 
-                # Cambiar el tamaño del QMessageBox
-                msg_box.resize(300, 200)
+        if not nombre:
+            mensajes_alerta.append("El nombre no puede estar vacío.")
+        
+        if not apellido:
+            mensajes_alerta.append("El apellido no puede estar vacío.")
+                
+        if not email:
+            mensajes_alerta.append("El email no puede estar vacío.")
+         
+        if not password:
+            mensajes_alerta.append("La contraseña no puede estar vacía.")
 
-                # Cambiar el estilo del botón
-                msg_box.setStyleSheet("""
-                    QPushButton {
-                        min-width: 30px;
-                        min-height: 15px;
-                    }
-                """)
-                self.dic_usuarios[email] = [nombre, apellido, password]
-                print(self.dic_usuarios)
-                ok = msg_box.exec()
-                if ok:
-                    self.layout_widgets.setCurrentWidget(self.login_widget)
-                self.nombre_registro.clear()
-                self.apellido_registro.clear()
-                self.email.clear()
-                self.contraseña_registro.clear()
-                self.contraseña_registro_verificacion.clear()
-                self.nombre_registro.setStyleSheet("border-color: gray;")
-                self.apellido_registro.setStyleSheet("border-color: gray;")
-                self.email.setStyleSheet("border-color: gray;")
-                self.contraseña_registro.setStyleSheet("border-color: gray;")
-                self.contraseña_registro_verificacion.setStyleSheet("border-color: gray;")
-            else:
-                self.mostrar_warning("Verifica que tus contraseñas sean iguales")
-                self.contraseña_registro.setStyleSheet("border-color: red;")
-                self.contraseña_registro_verificacion.setStyleSheet("border-color: red;")
-            
+        if not validacion_password:
+            mensajes_alerta.append("La verificación de contraseña no puede estar vacía.")
+
+        if mensajes_alerta:
+            self.mostrar_warning("\n".join(mensajes_alerta))
+            return
+
+        if password != validacion_password:
+            self.mostrar_warning("Verifica que tus contraseñas sean iguales")
+            return
+        else: 
+            msg_box = QMessageBox(self)
+            msg_box.setIcon(QMessageBox.Information)
+            msg_box.setText("Cuenta creada con éxito.")
+            msg_box.setWindowTitle("Cuenta Creada")
+
+            # Cambiar el tamaño del QMessageBox
+            msg_box.resize(300, 200)
+
+            # Cambiar el estilo del botón
+            msg_box.setStyleSheet("""
+                QPushButton {
+                    min-width: 30px;
+                    min-height: 15px;
+                }
+            """)
+            self.dic_usuarios[email] = [nombre, apellido, password]
+            print(self.dic_usuarios)
+            ok = msg_box.exec()
+            if ok:
+                self.layout_widgets.setCurrentWidget(self.login_widget)
+            self.nombre_registro.clear()
+            self.apellido_registro.clear()
+            self.email.clear()
+            self.contraseña_registro.clear()
+            self.contraseña_registro_verificacion.clear()
+            self.nombre_registro.setStyleSheet("border-color: gray;")
+            self.apellido_registro.setStyleSheet("border-color: gray;")
+            self.email.setStyleSheet("border-color: gray;")
+            self.contraseña_registro.setStyleSheet("border-color: gray;")
+            self.contraseña_registro_verificacion.setStyleSheet("border-color: gray;")
+
+
     
     def validar_nombre_registro(self, nombre_line_edit):
         nombre = nombre_line_edit.text().strip()
-        if not nombre:
-            self.mostrar_warning("El nombre no puede estar vacío.")
-            nombre_line_edit.setStyleSheet("border-color: red;")
-            return False
-        elif not re.match(r'^[a-zA-Z\s]+$', nombre):
+        # if not nombre:
+        #     self.mostrar_warning("El nombre no puede estar vacío.")
+        #     nombre_line_edit.setStyleSheet("border-color: red;")
+        #     return False
+        if not re.match(r'^[a-zA-Z\s]+$', nombre):
             self.mostrar_warning("El nombre no puede contener caracteres especiales ni dígitos.")
             nombre_line_edit.setStyleSheet("border-color: red;")
             return False
@@ -280,11 +323,11 @@ class MainWindow(QWidget):
     
     def validar_apellido_registro(self, apellido_line_edit):
         apellido = apellido_line_edit.text().strip()
-        if not apellido:
-            self.mostrar_warning("El apellido no puede estar vacío.")
-            apellido_line_edit.setStyleSheet("border-color: red;")
-            return False
-        elif not re.match(r'^[a-zA-Z\s]+$', apellido):
+        # if not apellido:
+        #     self.mostrar_warning("El apellido no puede estar vacío.")
+        #     apellido_line_edit.setStyleSheet("border-color: red;")
+        #     return False
+        if not re.match(r'^[a-zA-Z\s]+$', apellido):
             self.mostrar_warning("El apellido no puede contener caracteres especiales ni dígitos.")
             apellido_line_edit.setStyleSheet("border-color: red;")
             return False
@@ -300,10 +343,10 @@ class MainWindow(QWidget):
 
     def validar_email_registro(self, email_line_edit):
         email = email_line_edit.text()
-        if email.strip() == "":
-            self.mostrar_warning("El email no puede estar vacio.")
-            email_line_edit.setStyleSheet("border-color: red;")
-            return False
+        # if email.strip() == "":
+        #     self.mostrar_warning("El email no puede estar vacio.")
+        #     email_line_edit.setStyleSheet("border-color: red;")
+        #     return False
         
         email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         if not re.match(email_regex, email.strip()):
@@ -315,10 +358,10 @@ class MainWindow(QWidget):
             
     def validar_password_registro(self, password_line_edit):
         password = password_line_edit.text()
-        if password.strip() == "":
-            self.mostrar_warning("La contraseña no puede estar vacía.")
-            password_line_edit.setStyleSheet("border-color: red;")
-            return False
+        # if password.strip() == "":
+        #     self.mostrar_warning("La contraseña no puede estar vacía.")
+        #     password_line_edit.setStyleSheet("border-color: red;")
+        #     return False
 
         password_regex = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$'
         if not re.match(password_regex, password.strip()):
