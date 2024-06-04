@@ -1,43 +1,38 @@
 from reproductor_de_musica_ui_ui import Ui_MainWindow
+from ventana_nombre_ui import Ui_Dialog_nombre
+from cargar_archivos import CargarArchivosThread
 from PySide6.QtCore import *
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
 import sys
 import os
+import webbrowser
 import pygame
+import random
 
-class CargarArchivosThread(QThread):
-    progreso = Signal(int)
-    archivos_cargados = Signal(list)
-
-    def __init__(self, archivos):
-        super().__init__()
-        self.archivos = archivos
-
-    def run(self):
-        archivos_cargados = []
-        total_archivos = len(self.archivos)
-        for i, archivo in enumerate(self.archivos):
-            archivos_cargados.append(archivo)
-            progreso = int((i + 1) / total_archivos * 100)
-            self.progreso.emit(progreso)
-        self.archivos_cargados.emit(archivos_cargados)
 
 
 class MainMusicApp(QMainWindow, Ui_MainWindow):
     basedir = os.path.dirname(__file__)
     modo_oscuro_activado = False
-    
-
+    paso_agregar_foto = False
+    paso_agregar_nombre = False
+    paso_agregar_canciones = False
+    paso_agregar_favoritas = False
+    pasos_totales = 4
+    pasos_completados = 0
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+
         self.setWindowTitle("Pu♩se Music")
         self.setWindowIcon(QIcon(os.path.join(self.basedir, "icons/icons8-music-100.png")))
 
+        #Carga de canciones
         self.lista_reproducidas = []  # Lista de canciones reproducidas
         self.indice_actual = 0
         self.paused = False
+        self.modo_reproduccion = "secuencial"
 
         self.lista_de_reproduccion = [
         os.path.join(self.basedir, "canciones/Cual es esa, Feid Pirlo.mp3"),
@@ -52,7 +47,7 @@ class MainMusicApp(QMainWindow, Ui_MainWindow):
         os.path.join(self.basedir, "canciones/Si sabe Ferxxo, Blessd Feid.mp3"),
         ]
 
-        # Conectar botones stacked
+        #Conectar botones stacked
         self.settings_button.clicked.connect(self.mostrar_pagina_settings)
         self.back_to_home_settings.clicked.connect(self.mostrar_pagina_principal)
         self.boton_abrir_perfil_page.clicked.connect(self.mostrar_pagina_perfil)
@@ -68,20 +63,94 @@ class MainMusicApp(QMainWindow, Ui_MainWindow):
 
         self.mostrar_pagina_principal()
         self.cargar_canciones_iniciales()
+        self.actualizar_progreso()
+
+        #Botones de la pagina perfil
+        self.boton_foto_de_perfil.clicked.connect(self.abrir_foto_de_perfil)
+        self.tu_nombre_button.clicked.connect(self.poner_tu_nombre)
+
+        #Botones de soporte
+        self.enviar_buttton_apoyo.clicked.connect(self.enviar_correo)
+        
+        # actualizar la hora
+        self.timer_horalabel = QTimer(self)
+        self.timer_horalabel.timeout.connect(self.update_time)
+        self.timer_horalabel.start(1000)  # Actualizar cada segundo
 
         #conexiones ventana principal
         self.cargar_canciones_button.clicked.connect(lambda: self.agregar_archivos(self.lista_de_reproduccion, self.all_songs_list))
+        icon = QIcon(os.path.join(self.basedir, "icons/icons8-reproducir-64.png"))
+        self.pause_button.setIcon(icon)
         self.pause_button.setCheckable(True)
         self.pause_button.toggled.connect(self.button_toggled)
+        
 
         pygame.mixer.init()
         self.timer = QTimer()
         self.timer.timeout.connect(self.actualizar_slider)
+        
+        self.repeat_button.toggled.connect(self.on_repeat_button_toggled)
+        self.shuffle_button.toggled.connect(self.on_shuffle_button_toggled)
 
-        # self.pause_button.pressed.connect(lambda : self.reproducir_musica( self.lista_de_reproduccion, self.all_songs_list))
-        # self.pause_button.released.connect(self.pausar_musica)
+        self.next_button.clicked.connect(lambda : self.next_song(self.lista_de_reproduccion, self.all_songs_list))
+        self.previo_button.clicked.connect(lambda: self.cancion_anterior(self.lista_de_reproduccion, self.all_songs_list))
 
+
+        self.update_time()
     
+    def on_repeat_button_toggled(self, checked):
+        if checked:
+            # Si el botón de bucle se activa, desactiva el botón de aleatorio
+            self.shuffle_button.setChecked(False)
+            self.modo_reproduccion = "bucle"
+            
+        else:
+            self.modo_reproduccion = "secuencial"  # Si se desactiva, volver al modo secuencial
+            
+
+    def on_shuffle_button_toggled(self, checked):
+        if checked:
+            # Si el botón de aleatorio se activa, desactiva el botón de bucle
+            self.repeat_button.setChecked(False)
+            self.modo_reproduccion = "aleatorio"
+            
+        else:
+            self.modo_reproduccion = "secuencial"  # Si se desactiva, volver al modo secuencial
+            
+
+    def next_song(self, lista_de_reproduccion, lista_widget):
+        if lista_de_reproduccion:
+            print("Modo de reproducción:", self.modo_reproduccion)
+            print("Índice actual antes del cambio:", self.indice_actual)
+            if self.modo_reproduccion == "secuencial":
+                self.indice_actual = (self.indice_actual + 1) % len(lista_de_reproduccion)
+            elif self.modo_reproduccion == "aleatorio":
+                nuevo_indice = self.indice_actual
+                while nuevo_indice == self.indice_actual:
+                    nuevo_indice = random.randint(0, len(lista_de_reproduccion) - 1)
+                self.indice_actual = nuevo_indice
+            elif self.modo_reproduccion == "bucle":
+                self.detener_musica()
+            lista_widget.setCurrentRow(self.indice_actual)
+            print("Índice actual después del cambio:", self.indice_actual)
+            self.reproducir_musica(self.lista_de_reproduccion, self.all_songs_list)
+
+    def cancion_anterior(self, lista_de_reproduccion, lista_widget, mixer=pygame.mixer):
+        if lista_de_reproduccion:
+            if self.modo_reproduccion == "aleatorio":
+                if len(self.lista_reproducidas) <= 1:
+                    return
+                # Eliminar la canción actual de la lista de reproducidas
+                self.lista_reproducidas.pop()
+                # Establecer la canción anterior como la actual
+                ruta_archivo, nombre_cancion, duracion_total = self.lista_reproducidas[-1]
+                self.indice_actual = lista_de_reproduccion.index((ruta_archivo, nombre_cancion, duracion_total))
+            else:
+                self.indice_actual = (self.indice_actual - 1) % len(lista_de_reproduccion)
+            lista_widget.setCurrentRow(self.indice_actual)
+            self.reproducir_musica(lista_de_reproduccion, lista_widget)
+
+
     def button_toggled(self, checked):
         if checked:
             self.reproducir_musica(self.lista_de_reproduccion, self.all_songs_list)
@@ -92,7 +161,8 @@ class MainMusicApp(QMainWindow, Ui_MainWindow):
         if lista_de_reproduccion:
             # Detener la música actual si está reproduciéndose
             if mixer.music.get_busy():
-                mixer.music.stop()
+                self.pausar_musica()
+                
 
             # Obtener la canción seleccionada
             self.indice_actual = self.seleccionar_cancion(lista_widget)
@@ -106,7 +176,7 @@ class MainMusicApp(QMainWindow, Ui_MainWindow):
                 self.label_12.setText(f"{self.formato_tiempo(duracion_total)}")
                 self.paused = False
                 self.timer.start(1000)
-                icon = QIcon(os.path.join(self.basedir, "icons/icons8-reproducir-64.png"))
+                icon = QIcon(os.path.join(self.basedir, "icons/icons8-pause-48.png"))
                 self.pause_button.setIcon(icon)
                 self.lista_reproducidas.append((ruta_archivo, nombre_cancion, duracion_total))
 
@@ -114,22 +184,32 @@ class MainMusicApp(QMainWindow, Ui_MainWindow):
     def pausar_musica(self, mixer=pygame.mixer):
         if self.paused:
             mixer.music.unpause()
-            icon = QIcon(os.path.join(self.basedir, "icons/icons8-reproducir-64.png"))
+            icon = QIcon(os.path.join(self.basedir, "icons/icons8-pause-48.png"))
             self.pause_button.setIcon(icon)
             self.paused = False
         else:
             mixer.music.pause()
             self.paused = True
-            icon = QIcon(os.path.join(self.basedir, "icons/icons8-pause-48.png"))
+            icon = QIcon(os.path.join(self.basedir, "icons/icons8-reproducir-64.png"))
             self.pause_button.setIcon(icon)
 
     def actualizar_slider(self):
         if pygame.mixer.music.get_busy():
-            posicion_actual = pygame.mixer.music.get_pos() / 1000
-            self.slider_song.setValue(int(posicion_actual))  # Convertir a milisegundos
+            posicion_actual = pygame.mixer.music.get_pos() / 1000  # Convertir a segundos
+            self.slider_song.setValue(int(posicion_actual))
             self.label_11.setText(f"{self.formato_tiempo(posicion_actual)}")
+            
+            # Convertir la duración total de la canción en segundos
+            duracion_total = self.label_12.text()
+            minutos, segundos = map(int, duracion_total.split(':'))
+            duracion_total_segundos = minutos * 60 + segundos
+
+            # Comprobar si la canción ha terminado
+            if posicion_actual >= duracion_total_segundos:
+                self.next_song(self.lista_de_reproduccion, self.all_songs_list)
         else:
             self.timer.stop()
+
 
 
     def cargar_canciones_iniciales(self):
@@ -177,8 +257,10 @@ class MainMusicApp(QMainWindow, Ui_MainWindow):
             return indice_seleccionado
 
         else:
-            message_box.warning(self, "Advertencia", "Debes seleccionar una canción antes de reproducirla.")
-            return None
+            self.all_songs_list.setCurrentRow(0)
+            item_seleccionado = lista_widget.currentItem()
+            indice_seleccionado = lista_widget.row(item_seleccionado)
+            return indice_seleccionado
 
     def formato_tiempo(self, segundos):
         segundos = float(segundos)  # Convertir a flotante si es una cadena de texto
@@ -193,6 +275,10 @@ class MainMusicApp(QMainWindow, Ui_MainWindow):
 
     def mostrar_dialogo_advertencia(self, message_box=QMessageBox):
         message_box.warning(self, "Advertencia", "Debes seleccionar una canción antes de reproducirla.")
+
+    def update_time(self):
+        current_time = QTime.currentTime().toString('hh:mm AP')
+        self.label_hora.setText(current_time)
 
     def mostrar_pagina_settings(self):
         self.stackedWidget.setCurrentWidget(self.setting_page)
@@ -218,10 +304,95 @@ class MainMusicApp(QMainWindow, Ui_MainWindow):
     def mostrar_favoritas(self):
         self.stacked_songs.setCurrentWidget(self.favorite_songs_stack)
 
+    def abrir_foto_de_perfil(self):
+        file_mame, _ = QFileDialog.getOpenFileName(self, "Seleccionar imagen", "", "Imágenes (*.png *.xpm *.jpg *.jpeg *.bmp *.gif)")
+        if file_mame:
+            nueva_foto = QIcon(file_mame)
+            self.boton_abrir_perfil_page.setIcon(nueva_foto)
+            self.boton_foto_de_perfil.setIcon(nueva_foto)
+            if not self.paso_agregar_foto:
+                self.paso_agregar_foto = True
+                self.pasos_completados += 1
+            self.checkbox_pon_una_foto.setCheckable(True)
+            self.checkbox_pon_una_foto.setCheckState(Qt.Checked)
+            self.checkbox_pon_una_foto.setEnabled(False) 
+            self.actualizar_progreso()
+
+
+    def poner_tu_nombre(self):
+        dialog = QDialog()
+        dialog_ui = Ui_Dialog_nombre()
+        dialog_ui.setupUi(dialog)
+
+        dialog_ui.pushButton_aceptar.clicked.connect(lambda: self.aceptar_nombre(dialog, dialog_ui))
+        dialog_ui.pushButton_cancel.clicked.connect(dialog.reject)
+
+        dialog.exec()
+
+    def aceptar_nombre(self, dialog, dialog_ui):
+        nombre_anterior = self.tu_nombre_button.text()
+        nombre = dialog_ui.lineEdit_nombre.text().strip()
+        if not self.paso_agregar_nombre:
+            if nombre == "":
+                nombre = "TU NOMBRE"
+            else:
+                self.paso_agregar_nombre = True
+                self.pasos_completados += 1
+        else:
+            if nombre == "":
+                nombre = nombre_anterior
+        self.tu_nombre_button.setText(nombre.upper())
+        self.checkbox_agrega_tu_nombre.setCheckable(True)
+        self.checkbox_agrega_tu_nombre.setCheckState(Qt.Checked)
+        self.checkbox_agrega_tu_nombre.setEnabled(False) 
+        self.actualizar_progreso()
+        dialog.accept()
+
+   
+    def actualizar_progreso(self):
+        self.progressBar.setMaximum(self.pasos_totales)
+        self.progressBar.setValue(self.pasos_completados)
+        if self.pasos_completados == self.pasos_totales:
+            self.label_progreso_en_la_app.setText("Haz cumplido los objetivos")
+        else:
+            self.label_progreso_en_la_app.setText(f"Objetivos completados       {self.pasos_completados}/{self.pasos_totales}")
+
+    
+    def enviar_correo(self):
+        seleccionado = self.list_apoyo.currentItem()
+        texto = self.plainTextEdit_support.toPlainText().strip()
+        texto_a_enviar = self.plainTextEdit_support.toPlainText()
+
+        if seleccionado:
+            asunto = seleccionado.text()
+            if texto:
+                destinatario = "afmartinez23a@udenar.edu.co"
+                # Crear el enlace mailto
+                mailto_link = f"mailto:{destinatario}?subject={asunto}&body={texto_a_enviar}"
+
+                mailto_link = mailto_link.replace(' ', '%20')
+
+                # Abrir el enlace en el navegador predeterminado
+                webbrowser.open(mailto_link)
+                self.plainTextEdit_support.clear()
+
+            else:
+                self.mostrar_warning("El texto del recuadro inferior no debe estar vacio")
+        else:
+            self.mostrar_warning("Debes seleccionar un asunto de la lista")
+    
+    def mostrar_warning(self, message):
+        QMessageBox.warning(self, "Advertencia", message)
+
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setStyle("windowsvista")
-    pygame.mixer.init()  # Inicializar pygame.mixer
+    pygame.mixer.init()
     window = MainMusicApp()
     window.show()
     sys.exit(app.exec())
+
+
+
+    
