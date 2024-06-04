@@ -95,8 +95,16 @@ class MainMusicApp(QMainWindow, Ui_MainWindow):
         self.next_button.clicked.connect(lambda : self.next_song(self.lista_de_reproduccion, self.all_songs_list))
         self.previo_button.clicked.connect(lambda: self.cancion_anterior(self.lista_de_reproduccion, self.all_songs_list))
 
+        self.all_songs_list.itemDoubleClicked.connect(self.reproducir_cancion_seleccionada)
+
 
         self.update_time()
+
+    def manejar_volumen(self):
+        pass
+
+    def reproducir_cancion_seleccionada(self):
+        self.reproducir_musica(self.lista_de_reproduccion, self.all_songs_list)
     
     def on_repeat_button_toggled(self, checked):
         if checked:
