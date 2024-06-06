@@ -167,7 +167,7 @@ class MainMusicApp(QMainWindow, Ui_MainWindow):
 
         pygame.mixer.init()
         self.timer = QTimer()
-        self.timer.timeout.connect(self.actualizar_slider)
+        # self.timer.timeout.connect(self.actualizar_slider)
 
         self.all_songs_button.clicked.connect(self.cambiar_lista_a_all)
         self.favorite_songs_button.clicked.connect(self.cambiar_lista_a_favorite)
@@ -195,8 +195,7 @@ class MainMusicApp(QMainWindow, Ui_MainWindow):
                         self.favorite_song_list.takeItem(i)
                         self.lista_de_favoritos = [cancion for cancion in self.lista_de_favoritos if cancion[1] != nombre_cancion]
                         self.estado_favoritos[nombre_cancion] = False  # Actualizar estado
-                        break
-        self.actualizar_estado_boton_favorito(self.favorite_song_list)  # Actualizar el estado del botón de favoritos en la lista de favoritos
+                        break  # Actualizar el estado del botón de favoritos en la lista de favoritos
         self.actualizar_estado_boton_favorito(self.all_songs_list)  # Actualizar el estado del botón de favoritos en la lista de todas las canciones
 
         
@@ -205,7 +204,6 @@ class MainMusicApp(QMainWindow, Ui_MainWindow):
         lista_de_reproduccion = self.lista_de_reproduccion
         lista_widget = self.all_songs_list
         self.favorite_song_list.clearSelection()
-        self.all_songs_list.clearSelection()
         # self.actualizar_estado_boton_favorito(lista_widget)
         # self.favorite_button.setEnabled(True)
         self.reproductor_dinami(lista_de_reproduccion, lista_widget)
@@ -214,7 +212,6 @@ class MainMusicApp(QMainWindow, Ui_MainWindow):
         lista_de_reproduccion = self.lista_de_favoritos
         lista_widget = self.favorite_song_list
         self.all_songs_list.clearSelection()
-        self.favorite_song_list.clearSelection()
         # self.favorite_button.setEnabled(False)
         self.reproductor_dinami(lista_de_reproduccion, lista_widget)
 
@@ -238,7 +235,7 @@ class MainMusicApp(QMainWindow, Ui_MainWindow):
         # self.previo_button.clicked.connect(lambda: self.actualizar_estado_boton_favorito(lista_widget))
         self.favorite_button.toggled.connect(self.agregar_a_favoritos)
 
-        self.timer.timeout.connect(self.actualizar_slider)
+        self.timer.timeout.connect(lambda: self.actualizar_slider(lista_de_reproduccion, lista_widget))
 
     def desconectar_eventos(self):
         try:
@@ -577,7 +574,7 @@ class MainMusicApp(QMainWindow, Ui_MainWindow):
         pygame.mixer.music.stop()
         self.timer.stop()
     
-    def actualizar_slider(self):
+    def actualizar_slider(self, lista_de_reproduccion, lista_widget):
         if pygame.mixer.music.get_busy():
             if self.posicion_absoluta is not None:
                 posicion_actual = self.posicion_absoluta
@@ -595,7 +592,7 @@ class MainMusicApp(QMainWindow, Ui_MainWindow):
 
             # Comprobar si la canción ha terminado
             if posicion_actual+1 >= duracion_total_segundos:
-                self.next_song(self.lista_de_reproduccion, self.all_songs_list)
+                self.next_song(lista_de_reproduccion, lista_widget)
         else:
             self.timer.stop()
 
