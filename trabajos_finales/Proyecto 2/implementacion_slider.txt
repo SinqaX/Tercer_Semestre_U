@@ -1,0 +1,119 @@
+#conexion de slider para moverlo
+        self.slider_song.sliderPressed.connect(self.pausar_musica)
+        self.slider_song.sliderReleased.connect(self.soltar_slider)
+        self.posicion_absoluta = 0
+
+        
+
+    def pausar_musica(self):
+        if pygame.mixer.music.get_busy():
+            if not self.paused:
+                pygame.mixer.music.pause()
+                self.timer.stop()
+                self.paused = True
+                self.was_paused = True  # Registrar que la música estaba pausada antes de pausarla
+                icon = QIcon(os.path.join(self.basedir, "icons/icons8-reproducir-64.png"))
+                self.pause_button.setIcon(icon)
+            else:
+                pygame.mixer.music.unpause()
+                self.timer.start(1000)
+                self.paused = False
+                self.was_paused = False  # Registrar que la música estaba reproduciéndose antes de reanudarla
+                icon = QIcon(os.path.join(self.basedir, "icons/icons8-pause-48.png"))
+                self.pause_button.setIcon(icon)
+            
+    def reproducir_musica(self, lista_de_reproduccion, lista_widget, mixer=pygame.mixer):
+        if lista_de_reproduccion:
+            # Detener la música actual si está reproduciéndose y no está en pausa
+            if mixer.music.get_busy() and not self.paused:
+            # Si la música no está en pausa, detenerla antes de reproducir una nueva canción
+                self.detener_musica()
+
+            # Obtener la canción seleccionada
+            self.indice_actual = self.seleccionar_cancion(lista_widget)
+            if self.indice_actual is not None:
+                ruta_archivo, nombre_cancion, duracion_total = lista_de_reproduccion[self.indice_actual]
+
+                titulo, artista = extraer_info_cancion(ruta_archivo)
+                self.label_titulo_song.setText(titulo)
+                self.label_artista_song.setText(artista)
+                self.actualizar_posicion_texto()
+
+                # Cargar el archivo .lrc correspondiente
+                archivo_lrc = ruta_archivo.replace('.mp3', '.lrc')
+                if os.path.exists(archivo_lrc):
+                    self.actual_current_label_song.clear()
+                    self.cargar_letra(archivo_lrc)
+                else:
+                    self.letras_con_tiempos.clear()
+                    self.actual_current_label_song.setText("Esta canción no tiene letra")
+
+                # Extraer la imagen de los metadatos
+                imagen_data = extraer_imagen(ruta_archivo)
+                if imagen_data:
+                    pixmap = QPixmap()
+                    pixmap.loadFromData(imagen_data)
+                    if not pixmap.isNull():  # Comprobar si el pixmap no es nulo
+                        self.label_imagen_song.setPixmap(pixmap.scaled(QSize(60,60)))
+                    else:
+                        print("La imagen extraída de los metadatos es nula.")
+                else:
+                    print("No se encontró ninguna imagen en los metadatos.")
+                    pixmap = QPixmap(os.path.join(self.basedir, "icons/icons8-song-100.png"))
+                    self.label_imagen_song.setPixmap(pixmap.scaled(QSize(60,60)))
+
+
+                if not self.paused:
+                    # Cargar y reproducir la nueva canción seleccionada
+                    self.posicion_absoluta = 0
+                    mixer.music.load(ruta_archivo)
+                    mixer.music.play()
+                    self.slider_song.setRange(0, int(duracion_total))
+                    self.label_12.setText(f"{self.formato_tiempo(duracion_total)}")
+                    self.paused = False
+                    self.timer.start(1000)
+                    icon = QIcon(os.path.join(self.basedir, "icons/icons8-pause-48.png"))
+                    self.pause_button.setIcon(icon)
+                    #self.label_current_song.setText(nombre_cancion)  # Actualiza el nombre de la canción en la etiqueta
+                    self.lista_reproducidas.append((ruta_archivo, nombre_cancion, duracion_total))
+                else:
+                    # Reanudar la reproducción si estaba en pausa
+                    mixer.music.unpause()
+                    self.timer.start(1000)
+                    self.paused = False
+                    icon = QIcon(os.path.join(self.basedir, "icons/icons8-pause-48.png"))
+                    self.pause_button.setIcon(icon)
+
+    def soltar_slider(self):
+        # Extraer el valor del slider y actualizar la canción
+        self.posicion_absoluta = self.slider_song.value()
+        posicion_actual = self.slider_song.value()
+        self.label_11.setText(f"{self.formato_tiempo(posicion_actual)}")
+
+        # Detener el temporizador mientras se ajusta la posición de reproducción
+        self.timer.stop()
+
+        # Verificar si la música estaba en pausa antes de soltar el slider
+        if pygame.mixer.music.get_busy() and pygame.mixer.music.get_pos() == 0:
+            self.was_paused = True
+        else:
+            self.was_paused = False
+
+        # Si la música estaba reproduciéndose antes de manipular el slider, mantenerla reproduciéndose desde la nueva posición
+        if not self.was_paused:
+            pygame.mixer.music.set_pos(self.posicion_absoluta)
+            pygame.mixer.music.pause()
+            icon = QIcon(os.path.join(self.basedir, "icons/icons8-reproducir-64.png"))
+            self.pause_button.setIcon(icon)
+            self.paused = True
+            # Reanudar el temporizador
+            self.timer.start(1000)
+            self.pause_button.click()
+            self.pause_button.click()
+
+        # Comprobar si la canción ha terminado
+        duracion_total = self.label_12.text()
+        minutos, segundos = map(int, duracion_total.split(':'))
+        duracion_total_segundos = minutos * 60 + segundos
+        if posicion_actual + 1 >= duracion_total_segundos:
+            self.next_song(self.lista_de_reproduccion, self.all_songs_list)

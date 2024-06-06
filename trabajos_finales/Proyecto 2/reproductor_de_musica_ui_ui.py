@@ -17,17 +17,18 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDial,
     QFontComboBox, QFrame, QGridLayout, QHBoxLayout,
-    QLabel, QListWidget, QListWidgetItem, QMainWindow,
-    QPlainTextEdit, QProgressBar, QPushButton, QSizePolicy,
-    QSlider, QSpacerItem, QSpinBox, QStackedWidget,
-    QTextBrowser, QVBoxLayout, QWidget)
+    QLabel, QLayout, QListWidget, QListWidgetItem,
+    QMainWindow, QPlainTextEdit, QProgressBar, QPushButton,
+    QSizePolicy, QSlider, QSpacerItem, QSpinBox,
+    QStackedWidget, QTextBrowser, QVBoxLayout, QWidget)
+import recurses_rc
 import recurses_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1187, 787)
+        MainWindow.resize(1243, 787)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout_12 = QVBoxLayout(self.centralwidget)
@@ -143,8 +144,9 @@ class Ui_MainWindow(object):
 "    /* Deja los iconos por defecto, no es necesario especificar aqu\u00ed */\n"
 "}\n"
 "")
-        self.spin_box_aumentar_letra.setMinimum(10)
-        self.spin_box_aumentar_letra.setMaximum(16)
+        self.spin_box_aumentar_letra.setMinimum(1)
+        self.spin_box_aumentar_letra.setMaximum(5)
+        self.spin_box_aumentar_letra.setValue(2)
 
         self.gridLayout_6.addWidget(self.spin_box_aumentar_letra, 1, 1, 1, 1)
 
@@ -153,6 +155,8 @@ class Ui_MainWindow(object):
 
         self.widget_ejemplo = QWidget(self.setting_page)
         self.widget_ejemplo.setObjectName(u"widget_ejemplo")
+        sizePolicy1.setHeightForWidth(self.widget_ejemplo.sizePolicy().hasHeightForWidth())
+        self.widget_ejemplo.setSizePolicy(sizePolicy1)
         self.widget_ejemplo.setStyleSheet(u"QWidget {\n"
 "background-color: rgb(226, 224, 239);\n"
 "border-radius: 30px;\n"
@@ -169,6 +173,11 @@ class Ui_MainWindow(object):
 
         self.before_current_label_song_ej = QLabel(self.widget_ejemplo)
         self.before_current_label_song_ej.setObjectName(u"before_current_label_song_ej")
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Preferred)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.before_current_label_song_ej.sizePolicy().hasHeightForWidth())
+        self.before_current_label_song_ej.setSizePolicy(sizePolicy2)
         font1 = QFont()
         font1.setPointSize(13)
         font1.setBold(True)
@@ -181,6 +190,8 @@ class Ui_MainWindow(object):
 
         self.actual_current_label_song_ej = QLabel(self.widget_ejemplo)
         self.actual_current_label_song_ej.setObjectName(u"actual_current_label_song_ej")
+        sizePolicy2.setHeightForWidth(self.actual_current_label_song_ej.sizePolicy().hasHeightForWidth())
+        self.actual_current_label_song_ej.setSizePolicy(sizePolicy2)
         font2 = QFont()
         font2.setPointSize(20)
         font2.setWeight(QFont.ExtraBold)
@@ -192,6 +203,8 @@ class Ui_MainWindow(object):
 
         self.after_current_label_song_ej = QLabel(self.widget_ejemplo)
         self.after_current_label_song_ej.setObjectName(u"after_current_label_song_ej")
+        sizePolicy2.setHeightForWidth(self.after_current_label_song_ej.sizePolicy().hasHeightForWidth())
+        self.after_current_label_song_ej.setSizePolicy(sizePolicy2)
         self.after_current_label_song_ej.setFont(font1)
         self.after_current_label_song_ej.setStyleSheet(u"color: rgb(131, 131, 131);")
         self.after_current_label_song_ej.setAlignment(Qt.AlignCenter)
@@ -357,11 +370,11 @@ class Ui_MainWindow(object):
 
         self.enviar_buttton_apoyo = QPushButton(self.support_page)
         self.enviar_buttton_apoyo.setObjectName(u"enviar_buttton_apoyo")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.enviar_buttton_apoyo.sizePolicy().hasHeightForWidth())
-        self.enviar_buttton_apoyo.setSizePolicy(sizePolicy2)
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.enviar_buttton_apoyo.sizePolicy().hasHeightForWidth())
+        self.enviar_buttton_apoyo.setSizePolicy(sizePolicy3)
         self.enviar_buttton_apoyo.setMinimumSize(QSize(200, 50))
         self.enviar_buttton_apoyo.setMaximumSize(QSize(110, 40))
         font3 = QFont()
@@ -440,11 +453,8 @@ class Ui_MainWindow(object):
 
         self.label_14 = QLabel(self.about_us_page)
         self.label_14.setObjectName(u"label_14")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Preferred)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.label_14.sizePolicy().hasHeightForWidth())
-        self.label_14.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.label_14.sizePolicy().hasHeightForWidth())
+        self.label_14.setSizePolicy(sizePolicy2)
         self.label_14.setPixmap(QPixmap(u":/icons/icons/icons8-music-100.png"))
 
         self.gridLayout_4.addWidget(self.label_14, 1, 0, 1, 1)
@@ -617,8 +627,8 @@ class Ui_MainWindow(object):
 
         self.label_equalizer_0db = QLabel(self.equalizer_page)
         self.label_equalizer_0db.setObjectName(u"label_equalizer_0db")
-        sizePolicy2.setHeightForWidth(self.label_equalizer_0db.sizePolicy().hasHeightForWidth())
-        self.label_equalizer_0db.setSizePolicy(sizePolicy2)
+        sizePolicy3.setHeightForWidth(self.label_equalizer_0db.sizePolicy().hasHeightForWidth())
+        self.label_equalizer_0db.setSizePolicy(sizePolicy3)
 
         self.verticalLayout_5.addWidget(self.label_equalizer_0db)
 
@@ -771,10 +781,24 @@ class Ui_MainWindow(object):
         self.stackedWidget.addWidget(self.equalizer_page)
         self.principal_page = QWidget()
         self.principal_page.setObjectName(u"principal_page")
-        self.principal_page.setStyleSheet(u"QPushButton {\n"
+        self.principal_page.setStyleSheet(u"/* Estilo base */\n"
+"QPushButton {\n"
 "	border: none;\n"
 "	background: transparent;\n"
-"}")
+"}\n"
+"\n"
+"/* Estilo hover */\n"
+"QPushButton:hover {\n"
+"	background-color: rgba(255, 255, 255, 0.5);\n"
+"	border-radius: 5px; /* Border radius */\n"
+"}\n"
+"\n"
+"/* Estilo seleccionado */\n"
+"QPushButton:selected {\n"
+"	background-color: rgba(255, 255, 255, 0.8); /* Cambia la transparencia */\n"
+"	border-radius: 5px; /* Border radius */\n"
+"}\n"
+"")
         self.gridLayout_18 = QGridLayout(self.principal_page)
         self.gridLayout_18.setObjectName(u"gridLayout_18")
         self.gridLayout_18.setVerticalSpacing(15)
@@ -794,6 +818,7 @@ class Ui_MainWindow(object):
         self.boton_abrir_perfil_page.setObjectName(u"boton_abrir_perfil_page")
         self.boton_abrir_perfil_page.setMinimumSize(QSize(60, 50))
         self.boton_abrir_perfil_page.setCursor(QCursor(Qt.PointingHandCursor))
+        self.boton_abrir_perfil_page.setStyleSheet(u"border-radius: 25px;")
         icon2 = QIcon()
         icon2.addFile(u":/icons/icons/user.png", QSize(), QIcon.Normal, QIcon.Off)
         self.boton_abrir_perfil_page.setIcon(icon2)
@@ -846,67 +871,64 @@ class Ui_MainWindow(object):
         self.widget_3.setStyleSheet(u"QWidget {\n"
 "background-color: rgb(226, 224, 239);\n"
 "border-radius: 30px;\n"
-"}")
+"}\n"
+"/* Estilo base */\n"
+"QPushButton {\n"
+"	font-size: 20px;\n"
+"	border: none;\n"
+"	background: transparent;\n"
+"}\n"
+"\n"
+"/* Estilo hover */\n"
+"QPushButton:hover {\n"
+"	background-color: rgba(255, 255, 255, 0.4); /* Cambia la transparencia */\n"
+"	border-radius: 5px; /* Border radius */\n"
+"}\n"
+"\n"
+"/* Estilo seleccionado */\n"
+"QPushButton:selected {\n"
+"	background-color: rgba(255, 255, 255, 0.6); /* Cambia la transparencia */\n"
+"	border-radius: 5px; /* Border radius */\n"
+"}\n"
+"")
         self.gridLayout_13 = QGridLayout(self.widget_3)
         self.gridLayout_13.setObjectName(u"gridLayout_13")
-        self.gridLayout_13.setVerticalSpacing(15)
-        self.gridLayout_13.setContentsMargins(30, 20, 20, 20)
+        self.gridLayout_13.setContentsMargins(30, 30, 30, 30)
         self.verticalLayout_3 = QVBoxLayout()
-        self.verticalLayout_3.setSpacing(15)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setSpacing(15)
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.all_songs_button = QPushButton(self.widget_3)
         self.all_songs_button.setObjectName(u"all_songs_button")
+        sizePolicy5.setHeightForWidth(self.all_songs_button.sizePolicy().hasHeightForWidth())
+        self.all_songs_button.setSizePolicy(sizePolicy5)
         self.all_songs_button.setMinimumSize(QSize(70, 70))
-        self.all_songs_button.setMaximumSize(QSize(70, 70))
+        self.all_songs_button.setMaximumSize(QSize(16777215, 70))
         self.all_songs_button.setCursor(QCursor(Qt.PointingHandCursor))
         icon4 = QIcon()
         icon4.addFile(u":/icons/icons/all_songs.png", QSize(), QIcon.Normal, QIcon.Off)
         self.all_songs_button.setIcon(icon4)
         self.all_songs_button.setIconSize(QSize(70, 70))
         self.all_songs_button.setCheckable(True)
+        self.all_songs_button.setAutoExclusive(True)
 
-        self.horizontalLayout.addWidget(self.all_songs_button)
+        self.verticalLayout_3.addWidget(self.all_songs_button)
 
-        self.label_20 = QLabel(self.widget_3)
-        self.label_20.setObjectName(u"label_20")
-        self.label_20.setFont(font6)
-        self.label_20.setWordWrap(True)
-
-        self.horizontalLayout.addWidget(self.label_20)
-
-
-        self.verticalLayout_3.addLayout(self.horizontalLayout)
-
-        self.horizontalLayout_2 = QHBoxLayout()
-        self.horizontalLayout_2.setSpacing(15)
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.favorite_songs_button = QPushButton(self.widget_3)
         self.favorite_songs_button.setObjectName(u"favorite_songs_button")
+        sizePolicy5.setHeightForWidth(self.favorite_songs_button.sizePolicy().hasHeightForWidth())
+        self.favorite_songs_button.setSizePolicy(sizePolicy5)
         self.favorite_songs_button.setMinimumSize(QSize(70, 70))
-        self.favorite_songs_button.setMaximumSize(QSize(70, 70))
+        self.favorite_songs_button.setMaximumSize(QSize(16777215, 70))
         self.favorite_songs_button.setCursor(QCursor(Qt.PointingHandCursor))
         icon5 = QIcon()
         icon5.addFile(u":/icons/icons/icons8-pixel-heart-100.png", QSize(), QIcon.Normal, QIcon.Off)
         self.favorite_songs_button.setIcon(icon5)
         self.favorite_songs_button.setIconSize(QSize(70, 70))
         self.favorite_songs_button.setCheckable(True)
+        self.favorite_songs_button.setAutoExclusive(True)
 
-        self.horizontalLayout_2.addWidget(self.favorite_songs_button)
+        self.verticalLayout_3.addWidget(self.favorite_songs_button)
 
-        self.label_22 = QLabel(self.widget_3)
-        self.label_22.setObjectName(u"label_22")
-        self.label_22.setFont(font6)
-        self.label_22.setWordWrap(True)
-
-        self.horizontalLayout_2.addWidget(self.label_22)
-
-
-        self.verticalLayout_3.addLayout(self.horizontalLayout_2)
-
-        self.verticalSpacer_11 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.verticalSpacer_11 = QSpacerItem(20, 372, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout_3.addItem(self.verticalSpacer_11)
 
@@ -975,9 +997,31 @@ class Ui_MainWindow(object):
         sizePolicy9.setHeightForWidth(self.stacked_songs.sizePolicy().hasHeightForWidth())
         self.stacked_songs.setSizePolicy(sizePolicy9)
         self.stacked_songs.setStyleSheet(u"QWidget {\n"
-"background-color: rgb(226, 224, 239);\n"
-"border-radius: 30px;\n"
-"}")
+"    background-color: rgb(226, 224, 239);\n"
+"    border-radius: 30px;\n"
+"}\n"
+"\n"
+"QListWidget {\n"
+"    font-size: 14px; /* Tama\u00f1o de la letra */\n"
+"    padding: 5px;  /* Espacio interior del widget */\n"
+"}\n"
+"\n"
+"QListWidget::item {\n"
+"    height: 30px;  /* Altura de los elementos */\n"
+"    padding: 5px;  /* Espacio interior de los elementos */\n"
+"    border: 1px solid transparent; /* Borde transparente para el padding */\n"
+"}\n"
+"\n"
+"QListWidget::item:selected {\n"
+"    background-color: #9796bd; /* Color de fondo para el elemento seleccionado */\n"
+"    color: black; /* Color de la letra para el elemento seleccionado */\n"
+"}\n"
+"\n"
+"QListWidget::item:hover {\n"
+"    background-color: #7a78a0; /* Color de fondo cuando el mouse est\u00e1 sobre el elemento */\n"
+"    color: black; /* Color de la letra cuando el mouse est\u00e1 sobre el elemento */\n"
+"}\n"
+"")
         self.all_songs_stack = QWidget()
         self.all_songs_stack.setObjectName(u"all_songs_stack")
         self.verticalLayout_11 = QVBoxLayout(self.all_songs_stack)
@@ -1053,7 +1097,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_6 = QHBoxLayout()
         self.horizontalLayout_6.setSpacing(15)
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
-        self.horizontalSpacer_11 = QSpacerItem(40, 20, QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_11 = QSpacerItem(40, 20, QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_6.addItem(self.horizontalSpacer_11)
 
@@ -1126,7 +1170,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_5.addWidget(self.slider_volume)
 
-        self.horizontalSpacer_19 = QSpacerItem(60, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_19 = QSpacerItem(80, 20, QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_5.addItem(self.horizontalSpacer_19)
 
@@ -1179,7 +1223,6 @@ class Ui_MainWindow(object):
         self.pause_button.setCursor(QCursor(Qt.PointingHandCursor))
         icon10 = QIcon()
         icon10.addFile(u":/icons/icons/icons8-reproducir-64.png", QSize(), QIcon.Normal, QIcon.Off)
-        icon10.addFile(u":/icons/icons/icons8-pause-48.png", QSize(), QIcon.Normal, QIcon.On)
         self.pause_button.setIcon(icon10)
         self.pause_button.setIconSize(QSize(50, 50))
         self.pause_button.setCheckable(True)
@@ -1228,11 +1271,12 @@ class Ui_MainWindow(object):
 
         self.slider_song = QSlider(self.frame)
         self.slider_song.setObjectName(u"slider_song")
-        sizePolicy12 = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
-        sizePolicy12.setHorizontalStretch(10)
+        sizePolicy12 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        sizePolicy12.setHorizontalStretch(15)
         sizePolicy12.setVerticalStretch(0)
         sizePolicy12.setHeightForWidth(self.slider_song.sizePolicy().hasHeightForWidth())
         self.slider_song.setSizePolicy(sizePolicy12)
+        self.slider_song.setMinimumSize(QSize(500, 0))
         self.slider_song.setStyleSheet(u"QSlider::groove:horizontal {\n"
 "    border: 1px solid #bbb;\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #c661ea, stop: 1 rgb(179, 159, 255)); /* Gradiente horizontal */\n"
@@ -1268,6 +1312,7 @@ class Ui_MainWindow(object):
 "    border-radius: 5px;\n"
 "}\n"
 "")
+        self.slider_song.setMaximum(1000)
         self.slider_song.setOrientation(Qt.Horizontal)
 
         self.horizontalLayout_4.addWidget(self.slider_song)
@@ -1285,6 +1330,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout_10 = QGridLayout()
         self.gridLayout_10.setObjectName(u"gridLayout_10")
+        self.gridLayout_10.setSizeConstraint(QLayout.SetDefaultConstraint)
         self.gridLayout_10.setHorizontalSpacing(15)
         self.gridLayout_10.setVerticalSpacing(0)
         self.favorite_button = QPushButton(self.frame)
@@ -1321,32 +1367,34 @@ class Ui_MainWindow(object):
 
         self.gridLayout_10.addWidget(self.label_imagen_song, 0, 0, 2, 1)
 
-        self.label_15 = QLabel(self.frame)
-        self.label_15.setObjectName(u"label_15")
-        sizePolicy15 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
+        self.label_artista_song = QLabel(self.frame)
+        self.label_artista_song.setObjectName(u"label_artista_song")
+        sizePolicy15 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Maximum)
         sizePolicy15.setHorizontalStretch(0)
         sizePolicy15.setVerticalStretch(0)
-        sizePolicy15.setHeightForWidth(self.label_15.sizePolicy().hasHeightForWidth())
-        self.label_15.setSizePolicy(sizePolicy15)
-        self.label_15.setMinimumSize(QSize(0, 20))
+        sizePolicy15.setHeightForWidth(self.label_artista_song.sizePolicy().hasHeightForWidth())
+        self.label_artista_song.setSizePolicy(sizePolicy15)
+        self.label_artista_song.setMinimumSize(QSize(100, 20))
+        self.label_artista_song.setMaximumSize(QSize(100, 20))
 
-        self.gridLayout_10.addWidget(self.label_15, 1, 1, 1, 1, Qt.AlignTop)
+        self.gridLayout_10.addWidget(self.label_artista_song, 1, 1, 1, 1, Qt.AlignBottom)
 
-        self.label_30 = QLabel(self.frame)
-        self.label_30.setObjectName(u"label_30")
-        sizePolicy16 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
+        self.label_titulo_song = QLabel(self.frame)
+        self.label_titulo_song.setObjectName(u"label_titulo_song")
+        sizePolicy16 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.MinimumExpanding)
         sizePolicy16.setHorizontalStretch(0)
         sizePolicy16.setVerticalStretch(0)
-        sizePolicy16.setHeightForWidth(self.label_30.sizePolicy().hasHeightForWidth())
-        self.label_30.setSizePolicy(sizePolicy16)
-        self.label_30.setMinimumSize(QSize(0, 40))
-        self.label_30.setFont(font6)
-        self.label_30.setWordWrap(True)
-        self.label_30.setMargin(0)
+        sizePolicy16.setHeightForWidth(self.label_titulo_song.sizePolicy().hasHeightForWidth())
+        self.label_titulo_song.setSizePolicy(sizePolicy16)
+        self.label_titulo_song.setMinimumSize(QSize(100, 50))
+        self.label_titulo_song.setMaximumSize(QSize(100, 50))
+        self.label_titulo_song.setFont(font6)
+        self.label_titulo_song.setWordWrap(False)
+        self.label_titulo_song.setMargin(0)
 
-        self.gridLayout_10.addWidget(self.label_30, 0, 1, 1, 1, Qt.AlignBottom)
+        self.gridLayout_10.addWidget(self.label_titulo_song, 0, 1, 1, 1, Qt.AlignLeft|Qt.AlignVCenter)
 
-        self.horizontalSpacer_10 = QSpacerItem(40, 20, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_10 = QSpacerItem(40, 20, QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
 
         self.gridLayout_10.addItem(self.horizontalSpacer_10, 0, 3, 1, 1)
 
@@ -1405,6 +1453,59 @@ class Ui_MainWindow(object):
         self.gridLayout_22 = QGridLayout(self.widget)
         self.gridLayout_22.setObjectName(u"gridLayout_22")
         self.gridLayout_22.setContentsMargins(30, 40, 40, 40)
+        self.horizontalSpacer = QSpacerItem(400, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_22.addItem(self.horizontalSpacer, 1, 3, 1, 1)
+
+        self.boton_foto_de_perfil = QPushButton(self.widget)
+        self.boton_foto_de_perfil.setObjectName(u"boton_foto_de_perfil")
+        self.boton_foto_de_perfil.setCursor(QCursor(Qt.PointingHandCursor))
+        self.boton_foto_de_perfil.setStyleSheet(u"border-radius: 87px;")
+        icon14 = QIcon()
+        icon14.addFile(u":/icons/icons/user 2.png", QSize(), QIcon.Normal, QIcon.Off)
+        self.boton_foto_de_perfil.setIcon(icon14)
+        self.boton_foto_de_perfil.setIconSize(QSize(170, 170))
+        self.boton_foto_de_perfil.setCheckable(True)
+
+        self.gridLayout_22.addWidget(self.boton_foto_de_perfil, 0, 1, 2, 1)
+
+        self.verticalLayout_2 = QVBoxLayout()
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.label_perfil = QLabel(self.widget)
+        self.label_perfil.setObjectName(u"label_perfil")
+        sizePolicy17 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
+        sizePolicy17.setHorizontalStretch(0)
+        sizePolicy17.setVerticalStretch(0)
+        sizePolicy17.setHeightForWidth(self.label_perfil.sizePolicy().hasHeightForWidth())
+        self.label_perfil.setSizePolicy(sizePolicy17)
+        self.label_perfil.setMinimumSize(QSize(0, 25))
+        font8 = QFont()
+        font8.setFamilies([u"Verdana"])
+        font8.setBold(True)
+        self.label_perfil.setFont(font8)
+
+        self.verticalLayout_2.addWidget(self.label_perfil)
+
+        self.tu_nombre_button = QPushButton(self.widget)
+        self.tu_nombre_button.setObjectName(u"tu_nombre_button")
+        sizePolicy18 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
+        sizePolicy18.setHorizontalStretch(0)
+        sizePolicy18.setVerticalStretch(0)
+        sizePolicy18.setHeightForWidth(self.tu_nombre_button.sizePolicy().hasHeightForWidth())
+        self.tu_nombre_button.setSizePolicy(sizePolicy18)
+        font9 = QFont()
+        font9.setFamilies([u"Moran Demo"])
+        font9.setPointSize(58)
+        font9.setBold(False)
+        self.tu_nombre_button.setFont(font9)
+        self.tu_nombre_button.setCursor(QCursor(Qt.PointingHandCursor))
+        self.tu_nombre_button.setCheckable(True)
+
+        self.verticalLayout_2.addWidget(self.tu_nombre_button)
+
+
+        self.gridLayout_22.addLayout(self.verticalLayout_2, 0, 2, 2, 1)
+
         self.verticalLayout_7 = QVBoxLayout()
         self.verticalLayout_7.setObjectName(u"verticalLayout_7")
         self.back_to_home_profile = QPushButton(self.widget)
@@ -1425,56 +1526,6 @@ class Ui_MainWindow(object):
 
 
         self.gridLayout_22.addLayout(self.verticalLayout_7, 0, 0, 1, 1)
-
-        self.boton_foto_de_perfil = QPushButton(self.widget)
-        self.boton_foto_de_perfil.setObjectName(u"boton_foto_de_perfil")
-        self.boton_foto_de_perfil.setCursor(QCursor(Qt.PointingHandCursor))
-        self.boton_foto_de_perfil.setStyleSheet(u"border-radius: 87px;")
-        icon14 = QIcon()
-        icon14.addFile(u":/icons/icons/user 2.png", QSize(), QIcon.Normal, QIcon.Off)
-        self.boton_foto_de_perfil.setIcon(icon14)
-        self.boton_foto_de_perfil.setIconSize(QSize(170, 170))
-        self.boton_foto_de_perfil.setCheckable(True)
-
-        self.gridLayout_22.addWidget(self.boton_foto_de_perfil, 0, 1, 2, 1)
-
-        self.verticalLayout_2 = QVBoxLayout()
-        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.label_perfil = QLabel(self.widget)
-        self.label_perfil.setObjectName(u"label_perfil")
-        sizePolicy16.setHeightForWidth(self.label_perfil.sizePolicy().hasHeightForWidth())
-        self.label_perfil.setSizePolicy(sizePolicy16)
-        self.label_perfil.setMinimumSize(QSize(0, 25))
-        font8 = QFont()
-        font8.setFamilies([u"Verdana"])
-        font8.setBold(True)
-        self.label_perfil.setFont(font8)
-
-        self.verticalLayout_2.addWidget(self.label_perfil)
-
-        self.tu_nombre_button = QPushButton(self.widget)
-        self.tu_nombre_button.setObjectName(u"tu_nombre_button")
-        sizePolicy17 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
-        sizePolicy17.setHorizontalStretch(0)
-        sizePolicy17.setVerticalStretch(0)
-        sizePolicy17.setHeightForWidth(self.tu_nombre_button.sizePolicy().hasHeightForWidth())
-        self.tu_nombre_button.setSizePolicy(sizePolicy17)
-        font9 = QFont()
-        font9.setFamilies([u"Moran Demo"])
-        font9.setPointSize(58)
-        font9.setBold(False)
-        self.tu_nombre_button.setFont(font9)
-        self.tu_nombre_button.setCursor(QCursor(Qt.PointingHandCursor))
-        self.tu_nombre_button.setCheckable(True)
-
-        self.verticalLayout_2.addWidget(self.tu_nombre_button)
-
-
-        self.gridLayout_22.addLayout(self.verticalLayout_2, 0, 2, 2, 1)
-
-        self.horizontalSpacer = QSpacerItem(400, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.gridLayout_22.addItem(self.horizontalSpacer, 1, 3, 1, 1)
 
 
         self.gridLayout_23.addWidget(self.widget, 0, 0, 1, 1)
@@ -1624,7 +1675,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget.setCurrentIndex(4)
+        self.stackedWidget.setCurrentIndex(0)
         self.stacked_songs.setCurrentIndex(0)
 
 
@@ -1708,10 +1759,8 @@ class Ui_MainWindow(object):
         self.boton_abrir_perfil_page.setText("")
         self.label_hora.setText(QCoreApplication.translate("MainWindow", u"00:00", None))
         self.settings_button.setText("")
-        self.all_songs_button.setText("")
-        self.label_20.setText(QCoreApplication.translate("MainWindow", u"Todas las canciones", None))
-        self.favorite_songs_button.setText("")
-        self.label_22.setText(QCoreApplication.translate("MainWindow", u"Favoritas", None))
+        self.all_songs_button.setText(QCoreApplication.translate("MainWindow", u"  Todas las canciones", None))
+        self.favorite_songs_button.setText(QCoreApplication.translate("MainWindow", u"  Favoritas", None))
         self.before_current_label_song.setText(QCoreApplication.translate("MainWindow", u"Soy la letra de tu cancion antes", None))
         self.actual_current_label_song.setText(QCoreApplication.translate("MainWindow", u"Soy la letra de tu cancion actual", None))
         self.after_current_label_song.setText(QCoreApplication.translate("MainWindow", u"Soy la letra de tu cancion despues", None))
@@ -1728,12 +1777,12 @@ class Ui_MainWindow(object):
         self.label_12.setText(QCoreApplication.translate("MainWindow", u"00:00", None))
         self.favorite_button.setText("")
         self.label_imagen_song.setText("")
-        self.label_15.setText(QCoreApplication.translate("MainWindow", u"artist", None))
-        self.label_30.setText(QCoreApplication.translate("MainWindow", u"Favoritas", None))
-        self.back_to_home_profile.setText("")
+        self.label_artista_song.setText(QCoreApplication.translate("MainWindow", u"artista", None))
+        self.label_titulo_song.setText(QCoreApplication.translate("MainWindow", u"Titulo", None))
         self.boton_foto_de_perfil.setText("")
         self.label_perfil.setText(QCoreApplication.translate("MainWindow", u"perfil", None))
         self.tu_nombre_button.setText(QCoreApplication.translate("MainWindow", u"TU NOMBRE", None))
+        self.back_to_home_profile.setText("")
         self.label_agregar_tu_nombre.setText(QCoreApplication.translate("MainWindow", u"Agrega tu nonbre", None))
         self.checkbox_agrega_tu_nombre.setText("")
         self.label_pon_una_foto.setText(QCoreApplication.translate("MainWindow", u"Pon una foto", None))
